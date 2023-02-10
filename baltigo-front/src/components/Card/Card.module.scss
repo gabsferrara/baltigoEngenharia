@@ -1,0 +1,31 @@
+.card {
+    width: 220px;
+    padding: 20px;
+}
+
+.cabecalho {
+    color: white;
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: bold;
+    background-color: #dc7d11;
+    border-radius: 0px 0px;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px 5px 0px 0px;
+    box-shadow: 8px 8px rgba(205, 100, 9, 0.406);
+}
+
+
+.conteudo {
+    background-color: rgb(232, 225, 225) ;
+    box-shadow: 8px 8px rgba(67, 67, 67, 0.05);
+}
+
+.rodape {
+    display:flex;
+    background-color: rgb(232, 225, 225) ;
+    box-shadow: 8px 8px rgba(67, 67, 67, 0.05);
+    border-radius: 0px 0px 5px 5px;
+    justify-content: end;
+}
