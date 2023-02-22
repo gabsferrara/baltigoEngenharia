@@ -5,3 +5,76 @@
 h1 {
     color:#dc7d11;
 }
+
+.imagem {
+    width: 30px;
+}
+@media(min-width: 768px){
+    .cartao {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        width: 400px;
+        height: 200px;
+        border: 3px solid #dc7d11;
+        border-radius: 15px;
+        font-size: 20px; 
+        text-align: center;
+        color: gray;
+        padding-bottom: 20px;
+    }
+
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+.wpp {
+    display: flex;
+    color: gray;
+    align-items: center;
+    justify-items:flex-start;
+    font-size: 20px; 
+    padding: 5px;
+
+    button {
+        display: flex;
+        align-items: center;
+        justify-items: center;
+        text-align: center;
+        font-size: 20px;
+        color: gray;
+        border-radius: 50px;
+        border-color: rgb(18, 237, 18);
+        margin: 15px;    
+    }
+}
+
+.insta {
+    display: flex;
+    color: gray;
+    align-items: center;
+    justify-items:flex-start;
+    font-size: 20px; 
+    padding: 5px;
+
+    button {
+        display: flex;
+        align-items: center;
+        justify-items: center;
+        text-align: center;
+        font-size: 20px;
+        color: gray;
+        border-radius: 15px;
+        border-color: rgb(239, 168, 54);
+        margin: 15px;    
+    }
+}
+
+p {
+    font-size: 20px; 
+    text-align: center;
+    color: gray;
+}
