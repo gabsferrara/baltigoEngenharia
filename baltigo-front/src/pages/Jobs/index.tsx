@@ -62,7 +62,7 @@ export default function Jobs() {
     );
 
     useEffect(() => {
-        axios.get<ICard[]>("http://localhost:8080/jobs").then((response) => {
+        axios.get<ICard[]>("http://localhost:8080/getAllJobs").then((response) => {
           setCards(response.data);
         });
       }, []);

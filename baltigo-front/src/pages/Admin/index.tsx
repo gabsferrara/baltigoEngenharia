@@ -9,6 +9,7 @@ import Regularizacoes from '../../assets/img/cards/Regularizacoes.png'
 import Construcoes from '../../assets/img/cards/Construcoes.png'
 import { v4 as uuidv4 } from 'uuid'
 import Form from '../../components/FormAdmin';
+import axios from 'axios';
 
 
 export default function Admin() {
@@ -61,11 +62,8 @@ export default function Admin() {
     );
 
     const handleFormSubmit = (card: ICard) => {
-        console.log(card)
-        // setCards((prevState) => ({
-        //     ...prevState,
-        //     ...card,
-        // }));
+        console.log(card);     
+        axios.post<ICard>(`http://localhost:8080/EditJob/1`)
     };
 
 
