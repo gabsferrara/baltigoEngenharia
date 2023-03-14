@@ -12,6 +12,7 @@ import Form from '../../components/FormAdmin';
 import axios from 'axios';
 
 
+
 export default function Admin() {
 
     const [cards, setCards] = useState<ICard[] | []>(
@@ -62,8 +63,12 @@ export default function Admin() {
     );
 
     const handleFormSubmit = (card: ICard) => {
-        console.log(card);     
-        axios.post<ICard>(`http://localhost:8080/EditJob/1`)
+        console.log(card);
+        const jsonObject = JSON.stringify(card) 
+        console.log(jsonObject)   
+        axios.post<ICard>(`http://localhost:8080/EditJob/1`, jsonObject , {headers: {
+            'Content-Type': 'application/json'
+          }})
     };
 
 
