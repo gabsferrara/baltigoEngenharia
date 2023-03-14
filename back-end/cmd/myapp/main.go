@@ -42,7 +42,7 @@ func init() {
 		Conteudo: "Qualquer alteração nas condições da edificação com o objetivo de recuperar, melhorar ou ampliar suas condições de habitabilidade, uso ou segurança, e que não seja manutenção. Isso vale mesmo que não aconteça mudança de função, ou seja, que o espaço alterado não passe a ser usado para outro fim.",
 		Imagem:   "../../assets/img/cards/Reforma.png",
 		Info:     false,
-		ID:       uuid.New().String(),
+		ID:       "IDREFORMA",
 	}
 
 	jobs[2] = Job{
@@ -84,6 +84,7 @@ func main() {
 	cors := handlers.CORS(
 		handlers.AllowedOrigins([]string{"*"}), // Permite todos os domínios
 		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
+		handlers.AllowedHeaders([]string{"Content-Type"}),
 	)
 	r.Use(cors)
 
@@ -100,10 +101,27 @@ func main() {
 	}).Methods("GET")
 
 	// Handler para atualizar um trabalho pelo ID
-	r.HandleFunc("/EditJob/{id}", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
+	r.HandleFunc("/EditJob", func(w http.ResponseWriter, r *http.Request) {
 
-		fmt.Println("teste")
+		var job Job
+		err := json.NewDecoder(r.Body).Decode(&job)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		fmt.Printf("Antes: %+v ", jobs[1])
+
+		for i, j := range jobs {
+			if j.ID == job.ID {
+				jobs[i] = job
+				break
+			}
+		}
+
+		fmt.Printf("Depois: %+v ", jobs[1])
+
+		fmt.Fprintf(w, "Job recebido com sucesso!\n")
+
 	}).Methods("POST")
 
 	http.ListenAndServe(":8080", r)
