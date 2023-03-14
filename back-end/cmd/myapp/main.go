@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -86,7 +87,7 @@ func main() {
 	)
 	r.Use(cors)
 
-	r.HandleFunc("/jobs", func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc("/getAllJobs", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
 		jobsJSON, err := json.Marshal(jobs)
@@ -97,6 +98,13 @@ func main() {
 
 		w.Write(jobsJSON)
 	}).Methods("GET")
+
+	// Handler para atualizar um trabalho pelo ID
+	r.HandleFunc("/EditJob/{id}", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+
+		fmt.Println("teste")
+	}).Methods("POST")
 
 	http.ListenAndServe(":8080", r)
 }
