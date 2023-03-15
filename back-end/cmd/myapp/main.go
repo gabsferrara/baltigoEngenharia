@@ -97,6 +97,21 @@ func main() {
 			return
 		}
 
+		db, err := NewDB("jobs")
+		if err != nil {
+			// Trata o erro
+		}
+
+		jobs, err := GetAllJobs(db)
+		if err != nil {
+			// Trata o erro
+		}
+
+		// Usa a lista de documentos recuperados da coleção "jobs"
+		for _, job := range jobs {
+			// Processa cada documento
+		}
+
 		w.Write(jobsJSON)
 	}).Methods("GET")
 
