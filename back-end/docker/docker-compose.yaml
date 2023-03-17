@@ -8,3 +8,23 @@ services:
       - .:/go/src/
     extra_hosts:
       - "host.docker.internal:172.17.0.1"
+
+
+# version: "3.9"
+
+# services:
+#   backend:
+#     build:
+#       context: ../
+#       dockerfile: Dockerfile
+#     ports:
+#       - "8080:8080"
+#   frontend:
+#     image: node:latest
+#     depends_on:
+#       - backend
+#     volumes:
+#       - "../../baltigo-front:/app"
+#     ports:
+#       - "3000:3000"
+#     command: npm run start -- --host=0.0.0.0

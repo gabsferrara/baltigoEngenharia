@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -41,7 +42,7 @@ func init() {
 		Conteudo: "Qualquer alteração nas condições da edificação com o objetivo de recuperar, melhorar ou ampliar suas condições de habitabilidade, uso ou segurança, e que não seja manutenção. Isso vale mesmo que não aconteça mudança de função, ou seja, que o espaço alterado não passe a ser usado para outro fim.",
 		Imagem:   "../../assets/img/cards/Reforma.png",
 		Info:     false,
-		ID:       uuid.New().String(),
+		ID:       "IDREFORMA",
 	}
 
 	jobs[2] = Job{
@@ -83,10 +84,11 @@ func main() {
 	cors := handlers.CORS(
 		handlers.AllowedOrigins([]string{"*"}), // Permite todos os domínios
 		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
+		handlers.AllowedHeaders([]string{"Content-Type"}),
 	)
 	r.Use(cors)
 
-	r.HandleFunc("/jobs", func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc("/getAllJobs", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
 		jobsJSON, err := json.Marshal(jobs)
@@ -95,8 +97,47 @@ func main() {
 			return
 		}
 
+		db, err := NewDB("jobs")
+		if err != nil {
+			// Trata o erro
+		}
+
+		jobs, err := GetAllJobs(db)
+		if err != nil {
+			// Trata o erro
+		}
+
+		// Usa a lista de documentos recuperados da coleção "jobs"
+		for _, job := range jobs {
+			// Processa cada documento
+		}
+
 		w.Write(jobsJSON)
 	}).Methods("GET")
+
+	// Handler para atualizar um trabalho pelo ID
+	r.HandleFunc("/EditJob", func(w http.ResponseWriter, r *http.Request) {
+
+		var job Job
+		err := json.NewDecoder(r.Body).Decode(&job)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		fmt.Printf("Antes: %+v ", jobs[1])
+
+		for i, j := range jobs {
+			if j.ID == job.ID {
+				jobs[i] = job
+				break
+			}
+		}
+
+		fmt.Printf("Depois: %+v ", jobs[1])
+
+		fmt.Fprintf(w, "Job recebido com sucesso!\n")
+
+	}).Methods("POST")
 
 	http.ListenAndServe(":8080", r)
 }
