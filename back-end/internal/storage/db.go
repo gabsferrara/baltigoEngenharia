@@ -15,6 +15,10 @@ type DB struct {
 	Collection *mongo.Collection
 }
 
+func Test() string {
+	return "teste"
+}
+
 func NewDB(collectionName string) (*DB, error) {
 	// Define a URI de conexão com o MongoDB.
 	uri := "mongodb://gabs:123456@localhost:27017"

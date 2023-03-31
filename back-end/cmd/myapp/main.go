@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"back-end-baltigo/internal/storage"
+
 	"github.com/google/uuid"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -97,20 +99,22 @@ func main() {
 			return
 		}
 
-		db, err := NewDB("jobs")
-		if err != nil {
-			// Trata o erro
-		}
+		// db, err := NewDB("jobs")
+		// if err != nil {
+		// 	// Trata o erro
+		// }
 
-		jobs, err := GetAllJobs(db)
-		if err != nil {
-			// Trata o erro
-		}
+		// jobs, err := GetAllJobs(db)
+		// if err != nil {
+		// 	// Trata o erro
+		// }
 
-		// Usa a lista de documentos recuperados da coleção "jobs"
-		for _, job := range jobs {
-			// Processa cada documento
-		}
+		// // Usa a lista de documentos recuperados da coleção "jobs"
+		// for _, job := range jobs {
+		// 	// Processa cada documento
+		// }
+
+		fmt.Print(storage.Test())
 
 		w.Write(jobsJSON)
 	}).Methods("GET")
