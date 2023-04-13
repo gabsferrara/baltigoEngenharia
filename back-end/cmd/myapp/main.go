@@ -7,9 +7,9 @@ import (
 
 	"back-end-baltigo/internal/storage"
 
-	"github.com/google/uuid"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type Job struct {
@@ -30,54 +30,6 @@ type JobService interface {
 var jobs []Job
 
 func init() {
-	jobs = make([]Job, 6)
-	jobs[0] = Job{
-		Titulo:   "ART",
-		Conteudo: "A ART é o documento que define, para os efeitos legais, os responsáveis técnicos pelo desenvolvimento de atividade técnica no âmbito das profissões abrangidas pelo Sistema Confea/Crea.",
-		Imagem:   "../../assets/img/cards/ART.png",
-		Info:     false,
-		ID:       uuid.New().String(),
-	}
-
-	jobs[1] = Job{
-		Titulo:   "Reforma",
-		Conteudo: "Qualquer alteração nas condições da edificação com o objetivo de recuperar, melhorar ou ampliar suas condições de habitabilidade, uso ou segurança, e que não seja manutenção. Isso vale mesmo que não aconteça mudança de função, ou seja, que o espaço alterado não passe a ser usado para outro fim.",
-		Imagem:   "../../assets/img/cards/Reforma.png",
-		Info:     false,
-		ID:       "IDREFORMA",
-	}
-
-	jobs[2] = Job{
-		Titulo:   "Laudos",
-		Conteudo: "É um relatório emitido por um engenheiro especializado, logo após os processos de análise e avaliação, a respeito de um problema ou caso específico.",
-		Imagem:   "../../assets/img/cards/Laudos.png",
-		Info:     false,
-		ID:       uuid.New().String(),
-	}
-	jobs[3] = Job{
-		Titulo:   "Vistorias",
-		Conteudo: "Objetivo de avaliar a situação do ambiente de forma antecipada e preventiva. Essa análise pode ser feita tanto em obras como em estruturas que ainda estão em construção e deve gerar relatórios analíticos, com todas as informações necessárias sobre as condições do local.",
-		Imagem:   "../../assets/img/cards/Vistoria.png",
-		Info:     false,
-		ID:       uuid.New().String(),
-	}
-
-	jobs[4] = Job{
-		Titulo:   "Regularizações",
-		Conteudo: "É o procedimento pelo qual um imóvel inapto juridicamente torna-se apto.",
-		Imagem:   "../../assets/img/cards/Regularizacoes.png",
-		Info:     false,
-		ID:       uuid.New().String(),
-	}
-
-	jobs[5] = Job{
-		Titulo:   "Construções",
-		Conteudo: "É a execução do projeto previamente elaborado de uma edificação",
-		Imagem:   "../../assets/img/cards/Construcoes.png",
-		Info:     false,
-		ID:       uuid.New().String(),
-	}
-
 }
 
 func main() {
@@ -93,29 +45,34 @@ func main() {
 	r.HandleFunc("/getAllJobs", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
-		jobsJSON, err := json.Marshal(jobs)
+		connection, err := storage.Connect("jobs")
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			w.Write([]byte("Erro ao conectar"))
+			return
+		}
+		defer connection.Close()
+
+		documentos, err := connection.GetAll()
+		if err != nil {
+			w.Write([]byte("Erro ao pegar a colecao" + err.Error()))
 			return
 		}
 
-		// db, err := NewDB("jobs")
-		// if err != nil {
-		// 	// Trata o erro
-		// }
+		var jobs []Job
+		for _, doc := range documentos {
+			var job Job
+			bsonBytes, err := bson.Marshal(doc)
+			if err != nil {
+				fmt.Print("Erro ao separar documentos em documento")
+			}
+			err = bson.Unmarshal(bsonBytes, &job)
+			if err != nil {
+				fmt.Print("Erro ao converter byte no Job")
+			}
+			jobs = append(jobs, job)
+		}
 
-		// jobs, err := GetAllJobs(db)
-		// if err != nil {
-		// 	// Trata o erro
-		// }
-
-		// // Usa a lista de documentos recuperados da coleção "jobs"
-		// for _, job := range jobs {
-		// 	// Processa cada documento
-		// }
-
-		fmt.Print(storage.Test())
-
+		jobsJSON, _ := json.Marshal(jobs)
 		w.Write(jobsJSON)
 	}).Methods("GET")
 
@@ -141,6 +98,28 @@ func main() {
 
 		fmt.Fprintf(w, "Job recebido com sucesso!\n")
 
+	}).Methods("POST")
+
+	r.HandleFunc("/AddJob", func(w http.ResponseWriter, r *http.Request) {
+		connection, errCon := storage.Connect("jobs")
+		if errCon != nil {
+			http.Error(w, "Erro ao conectar - "+errCon.Error(), http.StatusBadRequest)
+			return
+		}
+		defer connection.Close()
+
+		var job Job
+
+		errConverter := json.NewDecoder(r.Body).Decode(&job)
+		if errConverter != nil {
+			http.Error(w, "Erro ao converter em Job -"+errConverter.Error(), http.StatusBadRequest)
+			return
+		}
+		errAdd := connection.Add(job)
+		if errAdd != nil {
+			http.Error(w, "Erro ao Adicionar -"+errAdd.Error(), http.StatusBadRequest)
+			return
+		}
 	}).Methods("POST")
 
 	http.ListenAndServe(":8080", r)

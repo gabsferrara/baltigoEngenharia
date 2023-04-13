@@ -10,6 +10,7 @@ import Construcoes from '../../assets/img/cards/Construcoes.png'
 import { v4 as uuidv4 } from 'uuid'
 import Form from '../../components/FormAdmin';
 import axios from 'axios';
+import api from '../../services/api';
 
 
 
@@ -29,7 +30,7 @@ export default function Admin() {
                 conteudo: 'Qualquer alteração nas condições da edificação com o objetivo de recuperar, melhorar ou ampliar suas condições de habitabilidade, uso ou segurança, e que não seja manutenção. Isso vale mesmo que não aconteça mudança de função, ou seja, que o espaço alterado não passe a ser usado para outro fim.',
                 imagem: Reforma,
                 info: false,
-                id: uuidv4()
+                id: 'IDREFORMA'
             },
             {
                 titulo: 'Laudos',
@@ -66,9 +67,8 @@ export default function Admin() {
         console.log(card);
         const jsonObject = JSON.stringify(card) 
         console.log(jsonObject)   
-        axios.post<ICard>(`http://localhost:8080/EditJob/1`, jsonObject , {headers: {
-            'Content-Type': 'application/json'
-          }})
+        api.post('/EditJob', jsonObject).then(response => console.log(response.data))
+        .catch(error => console.error(error));
     };
 
 

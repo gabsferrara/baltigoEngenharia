@@ -1,0 +1,4 @@
+FROM mongo:latest
+
+# Copia um script JS para inicializar o banco de dados
+COPY init.js /docker-entrypoint-initdb.d/
