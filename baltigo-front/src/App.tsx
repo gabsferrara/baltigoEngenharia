@@ -7,7 +7,6 @@ import AboutUs from './pages/AboutUs'
 import Contact from './pages/Contact'
 import React from 'react';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
-import { AdminPanelSettings } from '@mui/icons-material'
 
 function App() {
    

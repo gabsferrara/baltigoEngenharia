@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"mime/multipart"
 	"net/http"
 
 	"back-end-baltigo/internal/storage"
@@ -18,6 +19,11 @@ type Job struct {
 	Imagem   string `json:"imagem"`
 	Info     bool   `json:"info"`
 	ID       string `json:"id"`
+}
+
+type Job2 struct {
+	Titulo string         `json:"titulo"`
+	Imagem multipart.File `json:"imagem"`
 }
 
 type JobService interface {
@@ -120,6 +126,43 @@ func main() {
 			http.Error(w, "Erro ao Adicionar -"+errAdd.Error(), http.StatusBadRequest)
 			return
 		}
+	}).Methods("POST")
+
+	r.HandleFunc("/AddJob2", func(w http.ResponseWriter, r *http.Request) {
+		connection, errCon := storage.Connect("jobs2")
+		if errCon != nil {
+			http.Error(w, "Erro ao conectar - "+errCon.Error(), http.StatusBadRequest)
+			return
+		}
+		defer connection.Close()
+		err := r.ParseMultipartForm(32 << 20)
+		if err != nil {
+			fmt.Print(err.Error())
+			return
+		}
+		form := r.MultipartForm
+	// 	jobs := Job2{Titulo: form.Value["titulo"][0],
+	// Imagem: form.Value["imagem"][0],}
+		fmt.Println(form)
+
+		// return
+
+		// r.ParseMultipartForm(10 << 20)
+		// jobsJSON := r.FormValue("informacoes")
+		// jobs := Job2{}
+		// err := json.Unmarshal([]byte(jobsJSON), &jobs)
+		// if err != nil {
+		// 	http.Error(w, "Erro ao converter em Job "+err.Error(), http.StatusBadRequest)
+		// 	return
+		// }
+		// errAdd := connection.Add(jobs)
+		// if errAdd != nil {
+		// 	http.Error(w, "Erro ao Adicionar -"+errAdd.Error(), http.StatusBadRequest)
+		// 	return
+		// }
+
+		// w.Write([]byte("Deu certo"))
+
 	}).Methods("POST")
 
 	http.ListenAndServe(":8080", r)
