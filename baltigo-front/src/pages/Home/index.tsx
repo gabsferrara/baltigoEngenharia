@@ -8,7 +8,7 @@ const Home = () => {
     return (
         <>
             <div className={style.padding}>
-                <h1 className={style.titulo}>Ínicio</h1>
+                <h1 className={style.titulo}>Início</h1>
                 <p>A Baltigo Engenharia é uma empresa especializada em projetos e construções na área de engenharia civil. Com uma equipe altamente capacitada e comprometida com a excelência, temos como objetivo transformar ideias em soluções práticas e eficientes para nossos clientes.</p>
 
                 <p>Nosso time é formado por engenheiros, arquitetos e técnicos especializados em todas as etapas da construção, desde o planejamento até a entrega final do projeto. Além disso, contamos com tecnologias avançadas e materiais de alta qualidade para garantir a eficiência e segurança de nossos projetos.</p> 
